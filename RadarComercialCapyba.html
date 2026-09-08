@@ -617,16 +617,23 @@
     <div class="wrap">
       <div class="section-head">
         <h2>Top clientes faturados, 2025 vs. 2026</h2>
-        <div class="section-note">Ordem conforme o painel (não é ranking por valor) — MD Ranger, Pet Top, Open Health e Porto Digital aparecem nos dois anos: são contas fidelizadas.</div>
+        <div class="section-note">Valor faturado por cliente em cada ano, clicado direto no painel (cliente × ano). 2026 é parcial (até 08/09) — a queda % não é uma comparação justa de ano cheio, é o ritmo até agora.</div>
       </div>
-      <div class="chart-grid">
-        <div class="card">
-          <h3>2025</h3>
-          <div class="card-sub" id="top-2025"></div>
-        </div>
-        <div class="card">
-          <h3>2026 (YTD)</h3>
-          <div class="card-sub" id="top-2026"></div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th class="num">2025</th>
+              <th class="num">2026 (YTD)</th>
+              <th class="num">Var. %</th>
+            </tr>
+          </thead>
+          <tbody id="top-clients-body"></tbody>
+        </table>
+        <div class="table-foot">
+          <span>MD Ranger, Pet Top, Open Health e Porto Digital aparecem nos dois anos — são contas fidelizadas</span>
+          <span>Movida, Safe Beauty e Simpar: novas em 2026</span>
         </div>
       </div>
     </div>
@@ -1002,22 +1009,47 @@
     mixBody.appendChild(tr);
   });
 
-  // ---- Top clientes 2025 / 2026 ----
-  const top2025 = ['MD Ranger','Pet Top','Open Health','Porto Digital','ECG','Aplicativos de Bolso','Instituto Fogo Cruzado','FTD Educação','Nexamed','Amarante'];
-  const top2026 = ['MD Ranger','Pet Top','Open Health','Porto Digital','Movida','Nexamed','ECG','Safe Beauty','Simpar','MV'];
-  function renderTopList(list, hostId, highlightNew){
-    const host = document.getElementById(hostId);
-    host.innerHTML = list.map((c,i)=>{
-      const isNew = highlightNew && highlightNew.includes(c);
-      return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;">
-        <span class="mono" style="color:var(--text-muted);width:18px;">${i+1}</span>
-        <span style="color:var(--text-primary);${isNew?'font-weight:600;':''}">${c}</span>
-        ${isNew?'<span class="pill" style="margin-left:auto;background:var(--accent-soft);color:var(--accent);">novo em 2026</span>':''}
-      </div>`;
-    }).join('');
-  }
-  renderTopList(top2025, 'top-2025');
-  renderTopList(top2026, 'top-2026', ['Movida','Simpar','Safe Beauty']);
+  // ---- Top clientes 2025 / 2026: faturado por cliente e variação % ----
+  // Valores em R$ mil, extraídos clicando cliente x ano no painel "Perfil de clientes"
+  const clientRevenue = [
+    {name:'MD Ranger',              v2025: 940.1, v2026: 636.1},
+    {name:'Pet Top',                v2025: 725.0, v2026: 387.5},
+    {name:'Open Health',            v2025: 672.3, v2026: 324.6},
+    {name:'Porto Digital',          v2025: 601.0, v2026: 294.3},
+    {name:'ECG',                    v2025: 383.4, v2026: 152.2},
+    {name:'Nexamed',                v2025: 195.0, v2026: 198.8},
+    {name:'Aplicativos de Bolso',   v2025: 313.0, v2026: null},
+    {name:'Instituto Fogo Cruzado', v2025: 231.3, v2026: null},
+    {name:'FTD Educação',           v2025: 206.4, v2026: null},
+    {name:'Amarante',               v2025: 148.5, v2026: 114.5},
+    {name:'Movida',                 v2025: null,  v2026: 293.3},
+    {name:'Safe Beauty',            v2025: null,  v2026: 150.0},
+    {name:'Simpar',                 v2025: null,  v2026: 147.9},
+    {name:'MV',                     v2025: null,  v2026: 131.9},
+  ].sort((a,b) => (b.v2025 ?? -1) - (a.v2025 ?? -1) || (b.v2026 ?? -1) - (a.v2026 ?? -1));
+
+  function fmtMil(v){ return v==null ? '—' : `R$ ${v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})} mil`; }
+
+  const topClientsBody = document.getElementById('top-clients-body');
+  clientRevenue.forEach(d=>{
+    const tr = document.createElement('tr');
+    let varCell;
+    if (d.v2025 == null) {
+      varCell = `<span class="pill" style="background:var(--accent-soft);color:var(--accent);">novo em 2026</span>`;
+    } else if (d.v2026 == null) {
+      varCell = `<span class="pill">fora do top 10 em 2026</span>`;
+    } else {
+      const pct = ((d.v2026 - d.v2025) / d.v2025 * 100);
+      varCell = (pct >= 0 ? '+' : '') + pct.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}) + '%';
+    }
+    tr.innerHTML = `
+      <td class="client">${d.name}</td>
+      <td class="num">${fmtMil(d.v2025)}</td>
+      <td class="num">${fmtMil(d.v2026)}</td>
+      <td class="num">${varCell}</td>
+    `;
+    topClientsBody.appendChild(tr);
+  });
 
   // ===================== SLIDE DECK CONTROLLER =====================
   (function(){
