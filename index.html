@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Capyba Apresentações</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#faf9f5;
+    --surface:#ffffff;
+    --surface-2:#f2f0e9;
+    --text-primary:#17160f;
+    --text-secondary:#5c5a4c;
+    --text-muted:#8b8875;
+    --border:#e5e2d5;
+    --border-strong:#d2cebb;
+    --accent:#1c9d5c;
+    --accent-soft:#e3f5ea;
+    --accent-ink:#0a3d21;
+    --danger:#c1443c;
+    --danger-soft:#fbe9e7;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      color-scheme: dark;
+      --bg:#131310;
+      --surface:#1b1a15;
+      --surface-2:#211f19;
+      --text-primary:#f5f3ea;
+      --text-secondary:#c3c0ae;
+      --text-muted:#8f8c78;
+      --border:#333126;
+      --border-strong:#433f30;
+      --accent:#34d399;
+      --accent-soft:#132a1f;
+      --accent-ink:#8ff0c4;
+      --danger:#e88079;
+      --danger-soft:#2a1512;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:'IBM Plex Sans', -apple-system, sans-serif;
+    min-height:100vh;
+  }
+  .mono{font-family:'IBM Plex Mono', ui-monospace, monospace;}
+  h1,h2{font-family:'IBM Plex Serif', Georgia, serif; margin:0;}
+
+  /* ---- Login screen ---- */
+  #login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:
+      radial-gradient(680px 320px at 50% -10%, var(--accent-soft), transparent 70%);
+  }
+  .login-card{
+    width:100%;
+    max-width:380px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:36px 32px;
+  }
+  .login-brand{display:flex; align-items:center; gap:10px; margin-bottom:22px;}
+  .login-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);}
+  .login-brand span{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+  .login-card h1{font-size:22px; font-weight:700; margin-bottom:6px;}
+  .login-card p.sub{color:var(--text-secondary); font-size:13.5px; margin:0 0 26px 0; line-height:1.5;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;}
+  .field input{
+    width:100%;
+    padding:11px 13px;
+    border:1px solid var(--border-strong);
+    border-radius:8px;
+    background:var(--surface-2);
+    color:var(--text-primary);
+    font-size:14.5px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent);}
+  .login-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:var(--accent);
+    color:#fff;
+    font-size:14.5px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  .login-btn:hover{filter:brightness(0.94);}
+  .login-btn:active{filter:brightness(0.88);}
+  .error-msg{
+    display:none;
+    background:var(--danger-soft);
+    color:var(--danger);
+    font-size:13px;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-bottom:16px;
+  }
+  .error-msg.show{display:block;}
+
+  /* ---- App screen ---- */
+  #app-screen{display:none; min-height:100vh;}
+  header.top{
+    border-bottom:1px solid var(--border);
+    padding:20px 0;
+  }
+  .wrap{max-width:840px; margin:0 auto; padding:0 24px;}
+  .top-row{display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);}
+  .brand span{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+  .logout-btn{
+    background:none; border:1px solid var(--border-strong); border-radius:20px;
+    padding:6px 14px; font-size:12.5px; color:var(--text-secondary);
+    font-family:inherit; cursor:pointer;
+  }
+  .logout-btn:hover{border-color:var(--text-muted); color:var(--text-primary);}
+  main{padding:36px 0 60px 0;}
+  main h1{font-size:26px; margin-bottom:6px;}
+  main p.sub{color:var(--text-secondary); font-size:14px; margin:0 0 28px 0;}
+
+  .deck-list{display:flex; flex-direction:column; gap:12px;}
+  .deck-card{
+    display:flex; align-items:center; gap:16px;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:18px 20px;
+    text-decoration:none;
+    transition:border-color .15s;
+  }
+  .deck-card:hover{border-color:var(--accent);}
+  .deck-icon{
+    width:40px; height:40px; border-radius:9px; flex:none;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+  }
+  .deck-info{flex:1; min-width:0;}
+  .deck-info h3{font-size:15px; font-weight:600; color:var(--text-primary); margin:0 0 3px 0;}
+  .deck-info p{font-size:12.5px; color:var(--text-muted); margin:0;}
+  .deck-arrow{color:var(--text-muted); font-size:18px; flex:none;}
+  .deck-card:hover .deck-arrow{color:var(--accent);}
+
+  .empty-note{color:var(--text-muted); font-size:13px; margin-top:24px; padding-top:20px; border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="login-brand"><span class="dot"></span><span>Capyba</span></div>
+      <h1>Apresentações</h1>
+      <p class="sub">Acesso restrito ao time comercial. Entre com suas credenciais.</p>
+      <div class="error-msg" id="error-msg">Usuário ou senha incorretos.</div>
+      <form id="login-form">
+        <div class="field">
+          <label for="username">Usuário</label>
+          <input type="text" id="username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="login-btn">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app-screen">
+    <header class="top">
+      <div class="wrap top-row">
+        <div class="brand"><span class="dot"></span><span>Capyba Apresentações</span></div>
+        <button class="logout-btn" id="logout-btn">Sair</button>
+      </div>
+    </header>
+    <main>
+      <div class="wrap">
+        <h1>Apresentações e análises</h1>
+        <p class="sub">Links diretos para os decks e painéis do time comercial.</p>
+        <div class="deck-list" id="deck-list"></div>
+        <div class="empty-note">Para adicionar uma nova apresentação, publique o arquivo <span class="mono">.html</span> neste repositório e inclua-o na lista em <span class="mono">index.html</span>.</div>
+      </div>
+    </main>
+  </div>
+
+<script>
+(function(){
+  // ---- credentials: username plain, password SHA-256 hashed (not stored in plain text) ----
+  const VALID_USERNAME = "capybarigonatti";
+  const VALID_PASSWORD_HASH = "c9053138148c3ce4c322183231d156cdfaa10a0bc844db0c84f9cb31b0ed8912";
+  const SESSION_KEY = "capyba_apresentacoes_auth";
+
+  const decks = [
+    {
+      title: "Radar Comercial Capyba",
+      desc: "Análise de portfólio de propostas (2025–2026) + faturamento realizado por ano",
+      url: "https://capyba-rigonatti.github.io/Capyba-Apresentacoes/RadarComercialCapyba.html",
+      icon: "📊"
+    }
+  ];
+
+  async function sha256Hex(text){
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function renderDecks(){
+    const host = document.getElementById('deck-list');
+    host.innerHTML = decks.map(d => `
+      <a class="deck-card" href="${d.url}" target="_blank" rel="noopener">
+        <div class="deck-icon">${d.icon || '📄'}</div>
+        <div class="deck-info">
+          <h3>${d.title}</h3>
+          <p>${d.desc}</p>
+        </div>
+        <div class="deck-arrow">→</div>
+      </a>
+    `).join('');
+  }
+
+  function showApp(){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+    renderDecks();
+  }
+
+  function showLogin(){
+    document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+  }
+
+  // restore session (per-tab only)
+  try{
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      showApp();
+    }
+  }catch(e){ /* sessionStorage unavailable, fall back to login every time */ }
+
+  document.getElementById('login-form').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const errEl = document.getElementById('error-msg');
+
+    const passHash = await sha256Hex(pass);
+    const ok = (user === VALID_USERNAME) && (passHash === VALID_PASSWORD_HASH);
+
+    if (ok) {
+      errEl.classList.remove('show');
+      try{ sessionStorage.setItem(SESSION_KEY, '1'); }catch(e){}
+      showApp();
+    } else {
+      errEl.classList.add('show');
+      document.getElementById('password').value = '';
+      document.getElementById('password').focus();
+    }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', function(){
+    try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+    document.getElementById('login-form').reset();
+    showLogin();
+  });
+})();
+</script>
+</body>
+</html>
